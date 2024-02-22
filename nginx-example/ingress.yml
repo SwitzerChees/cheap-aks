@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-example
+  namespace: nginx-example
+  annotations:
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true" # Redirect www to non-www
+    acme.cert-manager.io/http01-edit-in-place: "true" # Use the HTTP01 challenge
+    cert-manager.io/cluster-issuer: letsencrypt-prod # Use the letsencrypt-prod ClusterIssuer
+    kubernetes.io/tls-acme: "true" # Allow Cert-Manager to manage TLS certificates
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - <your-domain-name> # Replace with your domain
+      secretName: <your-domain-name>-tls # Replace with your domain
+  rules:
+    - host: <your-domain-name> # Replace with your domain
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-example
+                port:
+                  name: http
