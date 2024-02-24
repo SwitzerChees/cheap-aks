@@ -18,7 +18,7 @@ export SUBSCRIPTION=<GUID> # az account ls
 export LOCATION=switzerlandnorth # az account list-locations -o table
 export RESOURCE_GROUP=<cheap-aks>
 export AKS_CLUSTER=<cheap-aks>
-export VM_SIZE=Standard_B2ts_v2 # az vm list-skus --location $LOCATION -o table
+export VM_SIZE=Standard_B2ls_v2 # az vm list-skus --location $LOCATION -o table
 
 # Create resource group
 az group create --name $RESOURCE_GROUP \
