@@ -51,6 +51,14 @@ az aks get-credentials \
 
 ## Configure AKS Cluster
 
+### Install Kubectl
+
+https://kubernetes.io/docs/tasks/tools/
+
+### Install Helm Package Manager
+
+https://helm.sh/docs/intro/install/
+
 ### Add Bitnami Repo for helm chart
 
 ```bash
