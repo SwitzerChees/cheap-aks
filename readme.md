@@ -13,12 +13,16 @@ az login
 # In case you have multifactor login for az cli tool
 az login --scope https://management.core.windows.net//.default
 
+
 # Fill env variables
-export SUBSCRIPTION=<GUID> # az account ls
+export SUBSCRIPTION=<GUID> # az account list --output table -> subscriptionId
 export LOCATION=switzerlandnorth # az account list-locations -o table
 export RESOURCE_GROUP=<cheap-aks>
 export AKS_CLUSTER=<cheap-aks>
 export VM_SIZE=Standard_B2ls_v2 # az vm list-skus --location $LOCATION -o table
+
+# Set the subcription that has to be used
+az account set --subscription $SUBSCRIPTION
 
 # Create resource group
 az group create --name $RESOURCE_GROUP \
@@ -47,6 +51,31 @@ az aks get-credentials \
 	--resource-group $RESOURCE_GROUP \
 	--name $AKS_CLUSTER \
     --admin
+
+# Remove the existing node pool
+az aks nodepool delete \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $AKS_CLUSTER \
+  --name default \
+  --no-wait
+
+# Add new node pool
+az aks nodepool add \
+  --resource-group $RESOURCE_GROUP \
+  --cluster-name $AKS_CLUSTER \
+  --name default \
+  --node-count 1 \
+  --enable-cluster-autoscaler \
+  --min-count 1 \
+  --max-count 1 \
+  --node-vm-size $VM_SIZE
+
+# Update load balancer sku to standard
+# IMPORTANT!!! This is a one way action you can't downgrade to basic anymore
+az aks update \
+  --resource-group $RESOURCE_GROUP \
+  --name $AKS_CLUSTER \
+  --load-balancer-sku standard
 ```
 
 ## Configure AKS Cluster
